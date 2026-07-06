@@ -7,7 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider.tsx"
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ThemeProvider defaultTheme="dark" storageKey="flowsphere-theme">
+    <ThemeProvider defaultTheme="dark" storageKey="agenthub-theme">
       <App />
     </ThemeProvider>
   </StrictMode>

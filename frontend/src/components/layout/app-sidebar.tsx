@@ -1,20 +1,5 @@
 import { Link, useLocation } from "react-router-dom"
-import {
-  LayoutDashboard,
-  GitBranch,
-  Cpu,
-  BarChart3,
-  FileText,
-  Building2,
-  Users,
-  Bell,
-  Settings,
-  User,
-  ChevronDown,
-  Zap,
-  Activity,
-  HelpCircle,
-} from "lucide-react"
+import { LayoutDashboard, Bot, ChartBar as BarChart3, Bell, Settings, User, ChevronDown, Brain, Activity, Circle as HelpCircle, Code as Code2, FileSearch, Bug, TestTube, FileText, Database, GitPullRequest, Rocket } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -26,6 +11,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -37,7 +25,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { dashboardSummary } from "@/lib/enterprise-data"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 
 const navMain = [
   {
@@ -47,28 +39,18 @@ const navMain = [
   },
 ]
 
-const navWorkflows = [
-  {
-    title: "Workflow Center",
-    url: "/workflows",
-    icon: GitBranch,
-    badge: "8",
-  },
-  {
-    title: "Templates",
-    url: "/templates",
-    icon: FileText,
-  },
+const agentList = [
+  { id: "code-gen", title: "Code Generation", icon: Code2 },
+  { id: "code-review", title: "Code Review", icon: FileSearch },
+  { id: "debug", title: "Debugging Agent", icon: Bug },
+  { id: "unit-test", title: "Unit Test Generator", icon: TestTube },
+  { id: "api-docs", title: "API Documentation", icon: FileText },
+  { id: "sql", title: "SQL Query Agent", icon: Database },
+  { id: "github-pr", title: "GitHub PR Review", icon: GitPullRequest },
+  { id: "devops", title: "DevOps Agent", icon: Rocket },
 ]
 
-const navAutomation = [
-  {
-    title: "Automation Center",
-    url: "/automation",
-    icon: Cpu,
-    badge: "1",
-    badgeVariant: "destructive" as const,
-  },
+const navInsights = [
   {
     title: "Analytics",
     url: "/analytics",
@@ -81,22 +63,7 @@ const navAutomation = [
   },
 ]
 
-const navOrganization = [
-  {
-    title: "Departments",
-    url: "/departments",
-    icon: Building2,
-  },
-  {
-    title: "Users",
-    url: "/users",
-    icon: Users,
-  },
-  {
-    title: "Reports",
-    url: "/reports",
-    icon: FileText,
-  },
+const navSupport = [
   {
     title: "Help Center",
     url: "/help",
@@ -108,6 +75,7 @@ export function AppSidebar() {
   const location = useLocation()
 
   const isActive = (url: string) => location.pathname === url || location.pathname.startsWith(url + "/")
+  const isAgentActive = location.pathname.startsWith("/agents")
 
   return (
     <Sidebar collapsible="icon">
@@ -117,11 +85,11 @@ export function AppSidebar() {
             <SidebarMenuButton size="lg" asChild>
               <Link to="/dashboard">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <Zap className="size-4" />
+                  <Brain className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-bold tracking-tight">FlowSphere</span>
-                  <span className="truncate text-xs text-sidebar-foreground/60">Enterprise Edition</span>
+                  <span className="truncate font-bold tracking-tight">AgentHub</span>
+                  <span className="truncate text-xs text-sidebar-foreground/60">AI Developer Platform</span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -148,48 +116,56 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Workflows</SidebarGroupLabel>
+          <SidebarGroupLabel>Agents</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navWorkflows.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title}>
-                    <Link to={item.url} className="flex items-center justify-between w-full">
-                      <span className="flex items-center gap-2">
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </span>
-                      {item.badge && (
-                        <Badge variant="secondary" className="ml-auto text-xs h-5 px-1.5">
-                          {item.badge}
-                        </Badge>
-                      )}
-                    </Link>
-                  </SidebarMenuButton>
+              <Collapsible asChild defaultOpen={isAgentActive}>
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton tooltip="Agents Hub">
+                      <Bot />
+                      <span>Agents Hub</span>
+                      <Badge variant="secondary" className="ml-auto text-xs h-5 px-1.5">8</Badge>
+                      <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      <SidebarMenuSubItem>
+                        <SidebarMenuSubButton asChild isActive={location.pathname === "/agents"}>
+                          <Link to="/agents">
+                            <span>All Agents</span>
+                          </Link>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                      {agentList.map((agent) => (
+                        <SidebarMenuSubItem key={agent.id}>
+                          <SidebarMenuSubButton asChild isActive={location.pathname === `/agents/${agent.id}`}>
+                            <Link to={`/agents/${agent.id}`}>
+                              <agent.icon className="h-3.5 w-3.5" />
+                              <span>{agent.title}</span>
+                            </Link>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
                 </SidebarMenuItem>
-              ))}
+              </Collapsible>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Automation</SidebarGroupLabel>
+          <SidebarGroupLabel>Insights</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navAutomation.map((item) => (
+              {navInsights.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title}>
                     <Link to={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                      {item.badge && (
-                        <Badge
-                          variant={item.badgeVariant ?? "secondary"}
-                          className="ml-auto text-xs h-5 px-1.5"
-                        >
-                          {item.badge}
-                        </Badge>
-                      )}
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -199,10 +175,10 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Organization</SidebarGroupLabel>
+          <SidebarGroupLabel>Support</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navOrganization.map((item) => (
+              {navSupport.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title}>
                     <Link to={item.url}>
@@ -224,9 +200,6 @@ export function AppSidebar() {
               <Link to="/notifications">
                 <Bell />
                 <span>Notifications</span>
-                {dashboardSummary.notificationsUnread > 0 && (
-                  <Badge variant="destructive" className="ml-auto text-xs h-5 px-1.5">{dashboardSummary.notificationsUnread}</Badge>
-                )}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -252,7 +225,7 @@ export function AppSidebar() {
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold">Alex Chen</span>
-                    <span className="truncate text-xs text-sidebar-foreground/60">Operations Admin</span>
+                    <span className="truncate text-xs text-sidebar-foreground/60">Developer</span>
                   </div>
                   <ChevronDown className="ml-auto size-4" />
                 </SidebarMenuButton>

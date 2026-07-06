@@ -3,6 +3,7 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { AppSidebar } from "./app-sidebar"
 import { AppHeader } from "./app-header"
 import { CommandPalette } from "@/components/command-palette"
+import { AssistantChat } from "@/components/assistant/assistant-chat"
 
 export function AppShell() {
   return (
@@ -15,6 +16,7 @@ export function AppShell() {
         </main>
       </SidebarInset>
       <CommandPalette />
+      <AssistantChat />
     </SidebarProvider>
   )
 }

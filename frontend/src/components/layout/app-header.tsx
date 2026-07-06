@@ -15,16 +15,13 @@ import { useTheme } from "@/components/theme-provider"
 
 const routeLabels: Record<string, string> = {
   dashboard: "Dashboard",
-  workflows: "Workflow Center",
-  templates: "Templates",
-  automation: "Automation Center",
+  agents: "Agents Hub",
   analytics: "Analytics",
-  reports: "Reports",
-  departments: "Departments",
-  users: "Users",
   notifications: "Notifications",
   profile: "Profile",
   settings: "Settings",
+  help: "Help Center",
+  activity: "Activity Center",
 }
 
 export function AppHeader() {
@@ -42,7 +39,7 @@ export function AppHeader() {
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
               <Link to="/dashboard" className="text-muted-foreground hover:text-foreground transition-colors">
-                FlowSphere
+                AgentHub
               </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
